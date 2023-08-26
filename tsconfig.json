@@ -1,18 +1,36 @@
 {
+  "ts-node": {
+    "files": true
+  },
+  "files": [
+    "environment.d.ts"
+  ],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "sourceMap": true,
+    "module": "CommonJS",
+    "target": "ES2017",
+    "sourceMap": false,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "baseUrl": "./",
     "downlevelIteration": true,
-    "typeRoots": ["/node_modules/@types"],
-    "types": ["mocha", "node"],
+    "types": ["node", "mocha"],
     "esModuleInterop": true,
-    "inlineSources": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@lib/logger": [
+        "libs/logger/src"
+      ],
+      "@lib/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@lib/utils": [
+        "libs/utils/src"
+      ],
+      "@lib/utils/*": [
+        "libs/utils/src/*"
+      ]
+    }
   }
 }

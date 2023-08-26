@@ -1,3 +1,5 @@
 // Import interfaces
-//util
+// User
+export * from "./user.interface";
+// util
 export * from "./util.interface";

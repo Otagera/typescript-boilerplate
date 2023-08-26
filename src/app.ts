@@ -1,16 +1,10 @@
-//To  make sure any property i add to response or request would be recognized
-declare module "express-serve-static-core" {
-  interface Response {
-    statusJson: (statusCode: number, data: {}) => void;
-  }
-}
-
+// import "../environment.d.ts";
 import { Express } from "express-serve-static-core";
 import express, {
-  Request,
-  Response,
-  NextFunction,
-  ErrorRequestHandler,
+	Request,
+	Response,
+	NextFunction,
+	ErrorRequestHandler,
 } from "express";
 import createError from "http-errors";
 import path from "path";
@@ -19,15 +13,10 @@ import logger from "morgan";
 import dotenv from "dotenv";
 import * as http from "http";
 import cors from "cors";
-import Airtable from "airtable";
 
 dotenv.config();
 
 export const app: Express = express();
-export const base = new Airtable({
-  apiKey: process.env.AIRTABLE_API_KEY,
-  endpointUrl: "https://api.airtable.com",
-}).base(process.env.AIRTABLE_DB_ID);
 export const view = "Grid view";
 
 /**
@@ -40,7 +29,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(logger("dev"));
-app.use("/api/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -49,15 +37,15 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.statusJson = (statusCode: number, data: {}): void => {
-    let obj = {
-      ...data,
-      statusCode: statusCode,
-    };
-    res.status(statusCode).json(obj);
-    return;
-  };
-  next();
+	res.statusJson = (statusCode: number, data: {}): void => {
+		let obj = {
+			...data,
+			statusCode: statusCode,
+		};
+		res.status(statusCode).json(obj);
+		return;
+	};
+	next();
 });
 
 import { AppRouter } from "./AppRouter";
@@ -71,18 +59,18 @@ import "./controllers/APIController";
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
-  next(createError(404));
+	next(createError(404));
 });
 
 // error  handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+	// render the error page
+	res.status(err.status || 500);
+	res.render("error");
 });
 
 /**
@@ -111,17 +99,17 @@ server.on("listening", onListening);
  */
 
 function normalizePort(val: any) {
-  const port = parseInt(val, 10);
+	const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    return val;
-  }
+	if (isNaN(port)) {
+		return val;
+	}
 
-  if (port >= 0) {
-    return port;
-  }
+	if (port >= 0) {
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -129,25 +117,25 @@ function normalizePort(val: any) {
  */
 
 function onError(error: any) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
+	if (error.syscall !== "listen") {
+		throw error;
+	}
 
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+	var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
-      process.exit(1);
-      break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case "EACCES":
+			console.error(bind + " requires elevated privileges");
+			process.exit(1);
+			break;
+		case "EADDRINUSE":
+			console.error(bind + " is already in use");
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
 }
 
 /**
@@ -155,11 +143,11 @@ function onError(error: any) {
  */
 
 function onListening() {
-  const addr = server.address();
-  const bind =
-    typeof addr === "string" ? "pipe " + addr : addr ? "port " + addr.port : "";
-  debug("Listening on " + bind);
-  console.log("=============");
-  console.log("=============");
-  console.log("App is listening from port: " + port);
+	const addr = server.address();
+	const bind =
+		typeof addr === "string" ? "pipe " + addr : addr ? "port " + addr.port : "";
+	debug("Listening on " + bind);
+	console.log("=============");
+	console.log("=============");
+	console.log("App is listening from port: " + port);
 }
