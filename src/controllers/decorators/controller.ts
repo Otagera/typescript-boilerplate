@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-import { Request, Response, NextFunction, RequestHandler} from 'express';
-import { AppRouter } from '../../AppRouter';
-import { Methods } from './Methods';
-import { MetadataKeys } from './MetadataKeys';
-import { bodyValidators } from '../../middlewares/bodyValidators';
-import { use } from './use';
+import "reflect-metadata";
+import { Request, Response, NextFunction, RequestHandler } from "express";
+import { AppRouter } from "../../AppRouter";
+import { Methods } from "./Methods";
+import { MetadataKeys } from "./MetadataKeys";
+import { bodyValidators } from "../../middlewares/bodyValidators";
+import { use } from "./use";
 /*
 function bodyValidators(keys: string): RequestHandler {
 	return function(req: Request, res: Response, next: NextFunction){
@@ -23,10 +23,10 @@ function bodyValidators(keys: string): RequestHandler {
 	};
 }*/
 
-export function controller(routePrefix: string){
-	return function(target: Function){
+export function controller(routePrefix: string) {
+	return function (target: Function) {
 		const router = AppRouter.getInstance();
-		for(let key in target.prototype){
+		for (let key in Object.getOwnPropertyDescriptors(target.prototype)) {
 			const routeHandler = target.prototype[key];
 			const path = Reflect.getMetadata(
 				MetadataKeys.path,
@@ -38,20 +38,16 @@ export function controller(routePrefix: string){
 				target.prototype,
 				key
 			);
-			const middlewares = Reflect.getMetadata(
-				MetadataKeys.middleware,
-				target.prototype,
-				key
-			) || [];
-			const requiredBodyProps = Reflect.getMetadata(
-				MetadataKeys.validator,
-				target.prototype,
-				key
-			) || [];
+			const middlewares =
+				Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) ||
+				[];
+			const requiredBodyProps =
+				Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) ||
+				[];
 
 			const validator = bodyValidators(requiredBodyProps);
 
-			if(path){
+			if (path) {
 				router[method](
 					`${routePrefix}${path}`,
 					...middlewares,
@@ -60,5 +56,5 @@ export function controller(routePrefix: string){
 				);
 			}
 		}
-	}
+	};
 }

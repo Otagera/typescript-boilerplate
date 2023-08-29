@@ -1,10 +1,9 @@
 {
   "ts-node": {
-    "files": true
+    "files": true,
+    "transpileOnly": true,
+    "require": ["tsconfig-paths/register"]
   },
-  "files": [
-    "environment.d.ts"
-  ],
   "compilerOptions": {
     "module": "CommonJS",
     "target": "ES2017",

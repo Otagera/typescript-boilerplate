@@ -146,7 +146,7 @@ export class LoggerService implements ILoggerService {
 			quietReqLogger: true,
 			customSuccessMessage: (req: IncomingMessage, res: ServerResponse) => {
 				return `request ${
-					res.statusCode >= 400 ? red("errro") : green("success")
+					res.statusCode >= 400 ? red("error") : green("success")
 				} with status code: ${res.statusCode}`;
 			},
 			customErrorMessage: (

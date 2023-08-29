@@ -56,6 +56,7 @@ export class ApiException extends HttpException {
 }
 export class InternalServerErrorException extends HttpException {
 	constructor(objectOrError, descriptionOrOptions = "Internal Server Error") {
+		console.log(objectOrError, descriptionOrOptions);
 		super(
 			objectOrError,
 			HttpStatus.INTERNAL_SERVER_ERROR,

@@ -6,29 +6,33 @@ import express, {
 	NextFunction,
 	ErrorRequestHandler,
 } from "express";
+import * as http from "http";
 import createError from "http-errors";
 import path from "path";
 import cookieParser from "cookie-parser";
-import logger from "morgan";
 import dotenv from "dotenv";
-import * as http from "http";
 import cors from "cors";
+import "pino-mongodb";
+import { LoggerService } from "@lib/logger";
+import { EnvConfigService } from "@lib/utils";
+import { AppRouter } from "./AppRouter";
 
 dotenv.config();
+const envConfigService = new EnvConfigService();
+const logger = new LoggerService(
+	envConfigService.mongodb.pinoConnectionString,
+	"system"
+);
+logger.connect(envConfigService.LOG_LEVEL);
+const port = envConfigService.mainAPI.port;
 
 export const app: Express = express();
-export const view = "Grid view";
-
-/**
- * Create HTTP server.
- */
 const server: http.Server = http.createServer(app);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-
-app.use(logger("dev"));
+app.use(logger.pino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -48,14 +52,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
-import { AppRouter } from "./AppRouter";
-app.use(AppRouter.getInstance());
-
-import "./models/db";
-
+import "./models/index";
 import "./controllers/RootController";
 import "./controllers/AuthController";
-import "./controllers/APIController";
+// import "./controllers/APIController";
+app.use(AppRouter.getInstance());
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -67,87 +68,18 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
+	logger.error(err);
 
 	// render the error page
 	res.status(err.status || 500);
 	res.render("error");
 });
 
-/**
- * Module dependencies.
- */
-
-const debug = require("debug")("chapidyzz:server");
-
-/**
- * Get port from environment and store in Express.
- */
-const port = normalizePort(process.env.PORT || "3000");
-
 app.set("port", port);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
 server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val: any) {
-	const port = parseInt(val, 10);
-
-	if (isNaN(port)) {
-		return val;
-	}
-
-	if (port >= 0) {
-		return port;
-	}
-
-	return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error: any) {
-	if (error.syscall !== "listen") {
-		throw error;
-	}
-
-	var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-
-	// handle specific listen errors with friendly messages
-	switch (error.code) {
-		case "EACCES":
-			console.error(bind + " requires elevated privileges");
-			process.exit(1);
-			break;
-		case "EADDRINUSE":
-			console.error(bind + " is already in use");
-			process.exit(1);
-			break;
-		default:
-			throw error;
-	}
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-	const addr = server.address();
-	const bind =
-		typeof addr === "string" ? "pipe " + addr : addr ? "port " + addr.port : "";
-	debug("Listening on " + bind);
-	console.log("=============");
+server.on("listening", () => {
 	console.log("=============");
 	console.log("App is listening from port: " + port);
-}
+	console.log("=============");
+});
