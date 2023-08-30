@@ -25,6 +25,8 @@ const logger = new LoggerService(
 );
 logger.connect(envConfigService.LOG_LEVEL);
 const port = envConfigService.mainAPI.port;
+import "./db";
+import "./modules/index.module";
 
 export const app: Express = express();
 const server: http.Server = http.createServer(app);
@@ -51,11 +53,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	};
 	next();
 });
-
-import "./models/index";
-import "./controllers/RootController";
-import "./controllers/AuthController";
-// import "./controllers/APIController";
 app.use(AppRouter.getInstance());
 
 // catch 404 and forward to error handler

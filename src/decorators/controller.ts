@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { AppRouter } from "../../AppRouter";
+import { AppRouter } from "../AppRouter";
 import { Methods } from "./Methods";
 import { MetadataKeys } from "./MetadataKeys";
-import { bodyValidators } from "../../middlewares/bodyValidators";
+import { bodyValidators } from "../middlewares/bodyValidators";
 import { use } from "./use";
 /*
 function bodyValidators(keys: string): RequestHandler {

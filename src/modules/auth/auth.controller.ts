@@ -3,8 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
-import { get, post, bodyValidator, controller } from "./decorators/index";
-import { User, RequestWithBody } from "../interfaces";
+import { get, post, bodyValidator, controller } from "../../decorators/index";
+import { User } from "./user.interface";
+import { RequestWithBody } from "src/interfaces";
 
 const UserModel = mongoose.model<User>("User");
 
