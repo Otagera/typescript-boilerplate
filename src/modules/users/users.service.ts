@@ -5,7 +5,8 @@ import { ApiNotFoundException } from "@lib/logger/pino/type";
 
 export class UsersService {
 	user: MongoGenericRepository<IUser>;
-	constructor(private _userRepository: Model<IUserDocument>) {
+	private _userRepository: Model<IUserDocument>;
+	constructor() {
 		this.user = new MongoGenericRepository<IUser>(this._userRepository);
 	}
 	create(

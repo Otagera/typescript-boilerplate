@@ -3,52 +3,46 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
-import { get, post, bodyValidator, controller } from "../../decorators/index";
-import { User } from "./users.interface";
+import { post, bodyValidator, controller } from "../../decorators/index";
+import { IUser } from "./users.interface";
 import { RequestWithBody } from "src/interfaces";
+import { UsersService } from "./users.service";
+import { EncryptService } from "@lib/utils";
 
-const UserModel = mongoose.model<User>("User");
+const UserModel = mongoose.model<IUser>("User");
 
 @controller("/auth")
 export class AuthController {
+	private _usersService: UsersService = new UsersService();
+	private _encryptService: EncryptService = new EncryptService();
+
 	@post("/login")
 	@bodyValidator("username", "password")
 	async userLogin(req: RequestWithBody, res: Response) {
 		const { username, password } = req.body;
-		const dataF = {
+		const data = {
 			message: "Auth failed!",
 		};
 		try {
-			const users: User[] = await UserModel.find({
+			const users: IUser[] = await this._usersService.find({
 				username: username.toLowerCase(),
 			});
 			if (users.length < 1) {
-				return res.statusJson(401, { data: dataF });
+				return res.statusJson(401, { data });
 			}
-			bcrypt.compare(password, users[0].password, (err, result) => {
-				if (err) {
-					return res.statusJson(401, { data: dataF });
-				}
-				if (result) {
-					const token = jwt.sign(
-						{
-							username: users[0].username,
-							userId: users[0]._id,
-						},
-						process.env.JWT_KEY,
-						{
-							expiresIn: "48h",
-						}
-					);
-					const data = {
-						message: "Auth Successful",
-						token: token,
-						username: users[0].username,
-					};
-					return res.statusJson(200, { data: data });
-				}
-				return res.statusJson(402, { data: dataF });
-			});
+			const result = await this._encryptService.comparePasswords(
+				password,
+				users[0].password
+			);
+			if (result) {
+				const token = this._encryptService.createAuthToken(users[0].username);
+				const data = {
+					message: "Auth Successful",
+					token: token,
+					username: users[0].username,
+				};
+				return res.statusJson(200, { data: data });
+			}
 		} catch (error) {
 			const data = {
 				error,
@@ -71,7 +65,7 @@ export class AuthController {
 		const { username, password, email, address, firstname, lastname } =
 			req.body;
 		try {
-			const users: User[] = await UserModel.find({
+			const users: IUser[] = await this._usersService.find({
 				username: username.toLowerCase(),
 			});
 
@@ -81,31 +75,21 @@ export class AuthController {
 				};
 				return res.statusJson(409, { data: data });
 			} else {
-				bcrypt.hash(password, 10, async (err, hash) => {
-					if (err) {
-						return res.statusJson(500, {
-							data: {
-								err: err,
-							},
-						});
-					} else {
-						const user = new UserModel({
-							username: username.toLowerCase(),
-							password: hash,
-							email,
-							address,
-							firstname,
-							lastname,
-						});
-						const newUser = await user.save();
-						const data = {
-							message: "User created",
-							success: true,
-							user: newUser,
-						};
-						return res.statusJson(200, { data: data });
-					}
-				});
+				const hash = await this._encryptService.encryptPassword(password);
+				const user = await this._usersService.create(
+					username.toLowerCase(),
+					hash,
+					email,
+					address,
+					firstname,
+					lastname
+				);
+				const data = {
+					message: "User created",
+					success: true,
+					user,
+				};
+				return res.statusJson(200, { data: data });
 			}
 		} catch (error) {
 			console.log("===============");

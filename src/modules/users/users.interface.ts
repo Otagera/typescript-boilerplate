@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, ObjectId } from "mongoose";
 
 export interface IUser {
 	username: string;
@@ -11,5 +11,5 @@ export interface IUser {
 }
 export interface IUserDocument extends IUser, Document {}
 export interface IUserWithId extends IUser {
-	_id: number;
+	_id: ObjectId;
 }

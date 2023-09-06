@@ -140,7 +140,8 @@ export class EnvConfigService extends ConfigService implements IConfigService {
 		url: this.get("AWS_SQS_URL"),
 	};
 
-	ENV = this.get("NODE_ENV") || "development";
+	ENV = this.get<string>("NODE_ENV") || "development";
+	JWT_KEY = this.get<string>("JWT_KEY");
 
 	LOG_LEVEL = this.get<LevelWithSilent>("LOG_LEVEL");
 	pino = {

@@ -27,3 +27,8 @@ export type SplittedtDateTime = {
 };
 
 export type RecursivelyListDirCallback = (name: string) => void;
+
+export type AuthToken = {
+	accessToken: string;
+	refreshToken: string;
+};
