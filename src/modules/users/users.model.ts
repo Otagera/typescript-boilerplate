@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { User } from "./user.interface";
-console.log("user.mode.ts");
-const userSchema = new Schema<User>({
+import { IUser } from "./users.interface";
+
+const userSchema = new Schema<IUser>({
 	username: { type: String, required: true, unique: true, trim: true },
 	password: { type: String, required: true },
 	email: { type: String, required: true },
@@ -10,4 +10,4 @@ const userSchema = new Schema<User>({
 	lastname: { type: String, required: true },
 });
 
-mongoose.model<User>("User", userSchema);
+mongoose.model<IUser>("User", userSchema);

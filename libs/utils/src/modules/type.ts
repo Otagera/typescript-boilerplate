@@ -25,3 +25,5 @@ export type SplittedtDateTime = {
 	minute: number;
 	second: number;
 };
+
+export type RecursivelyListDirCallback = (name: string) => void;
