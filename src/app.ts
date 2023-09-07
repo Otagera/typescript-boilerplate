@@ -26,7 +26,6 @@ const logger = new LoggerService(
 logger.connect(envConfigService.LOG_LEVEL);
 const port = envConfigService.mainAPI.port;
 import "./db";
-import "./modules/index.module";
 
 export const app: Express = express();
 const server: http.Server = http.createServer(app);
@@ -34,9 +33,9 @@ const server: http.Server = http.createServer(app);
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(logger.pino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(logger.pino);
 app.use(cookieParser());
 app.use(cors());
 
@@ -80,3 +79,42 @@ server.on("listening", () => {
 	console.log("App is listening from port: " + port);
 	console.log("=============");
 });
+import "./modules/index.module";
+/* 
+function print(path, layer) {
+	if (layer.route) {
+		layer.route.stack.forEach(
+			print.bind(null, path.concat(split(layer.route.path)))
+		);
+	} else if (layer.name === "router" && layer.handle.stack) {
+		layer.handle.stack.forEach(
+			print.bind(null, path.concat(split(layer.regexp)))
+		);
+	} else if (layer.method) {
+		console.log(
+			"%s /%s",
+			layer.method.toUpperCase(),
+			path.concat(split(layer.regexp)).filter(Boolean).join("/")
+		);
+	}
+}
+
+function split(thing) {
+	if (typeof thing === "string") {
+		return thing.split("/");
+	} else if (thing.fast_slash) {
+		return "";
+	} else {
+		var match = thing
+			.toString()
+			.replace("\\/?", "")
+			.replace("(?=\\/|$)", "$")
+			.match(/^\/\^((?:\\[.*+?^${}()|[\]\\\/]|[^.*+?^${}()|[\]\\\/])*)\$\//);
+		return match
+			? match[1].replace(/\\(.)/g, "$1").split("/")
+			: "<complex:" + thing.toString() + ">";
+	}
+}
+
+app._router.stack.forEach(print.bind(null, []));
+ */

@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 
 import { post, bodyValidator, controller } from "../../decorators/index";
 import { IUser } from "./users.interface";
@@ -9,10 +6,10 @@ import { RequestWithBody } from "src/interfaces";
 import { UsersService } from "./users.service";
 import { EncryptService } from "@lib/utils";
 
-const UserModel = mongoose.model<IUser>("User");
+console.log("Test");
 
 @controller("/auth")
-export class AuthController {
+class AuthController {
 	private _usersService: UsersService = new UsersService();
 	private _encryptService: EncryptService = new EncryptService();
 
