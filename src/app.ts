@@ -1,4 +1,3 @@
-// import "../environment.d.ts";
 import { Express } from "express-serve-static-core";
 import express, {
 	Request,
@@ -52,7 +51,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	};
 	next();
 });
-app.use(AppRouter.getInstance());
+
+app.set("base", "/api/v1");
+app.use("/api/v1", AppRouter.getInstance());
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
