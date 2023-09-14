@@ -10,8 +10,8 @@ console.log("Test");
 
 @controller("/auth")
 class AuthController {
-	private _usersService: UsersService = new UsersService();
-	private _encryptService: EncryptService = new EncryptService();
+	private static _usersService: UsersService = new UsersService();
+	private static _encryptService: EncryptService = new EncryptService();
 
 	@post("/login")
 	@bodyValidator("username", "password")
@@ -21,18 +21,20 @@ class AuthController {
 			message: "Auth failed!",
 		};
 		try {
-			const users: IUser[] = await this._usersService.find({
+			const users: IUser[] = await AuthController._usersService.find({
 				username: username.toLowerCase(),
 			});
 			if (users.length < 1) {
 				return res.statusJson(401, { data });
 			}
-			const result = await this._encryptService.comparePasswords(
+			const result = await AuthController._encryptService.comparePasswords(
 				password,
 				users[0].password
 			);
 			if (result) {
-				const token = this._encryptService.createAuthToken(users[0].username);
+				const token = AuthController._encryptService.createAuthToken(
+					users[0].username
+				);
 				const data = {
 					message: "Auth Successful",
 					token: token,
@@ -59,10 +61,11 @@ class AuthController {
 		"lastname"
 	)
 	async userSignup(req: RequestWithBody, res: Response) {
+		console.log("this", this);
 		const { username, password, email, address, firstname, lastname } =
 			req.body;
 		try {
-			const users: IUser[] = await this._usersService.find({
+			const users: IUser[] = await AuthController._usersService.find({
 				username: username.toLowerCase(),
 			});
 
@@ -72,8 +75,10 @@ class AuthController {
 				};
 				return res.statusJson(409, { data: data });
 			} else {
-				const hash = await this._encryptService.encryptPassword(password);
-				const user = await this._usersService.create(
+				const hash = await AuthController._encryptService.encryptPassword(
+					password
+				);
+				const user = await AuthController._usersService.create(
 					username.toLowerCase(),
 					hash,
 					email,
@@ -100,3 +105,4 @@ class AuthController {
 		}
 	}
 }
+// const temp = new AuthController();
