@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import fs from "fs";
 import path from "path";
 import { FileManipulation } from "@lib/utils/modules/file-manipulation/FIleManipulation";
 
@@ -16,11 +15,13 @@ if (uri) {
 }
 
 mongoose.connection.on("connected", () => {
-	console.log("======================");
-	console.log("======================");
-	console.log(`Mongoose connected to ${uri}`);
-	console.log("======================");
-	console.log("======================");
+	const log = `Mongoose connected to ${uri}`;
+	const eq = Array.from(log)
+		.map(() => "=")
+		.join("");
+	console.log(eq);
+	console.log(log);
+	console.log(eq);
 });
 
 mongoose.connection.on("error", (err) => {
@@ -32,7 +33,7 @@ mongoose.connection.on("disconnected", () => {
 });
 
 const shutdown = (msg: string, callback) => {
-	mongoose.connection.close(() => {
+	mongoose.connection.addListener("close", () => {
 		console.log(`Mongoose disconnected through ${msg}`);
 		callback();
 	});

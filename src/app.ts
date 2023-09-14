@@ -75,9 +75,8 @@ app.set("port", port);
 
 server.listen(port);
 server.on("listening", () => {
-	console.log("=============");
+	console.log("================================");
 	console.log("App is listening from port: " + port);
-	console.log("=============");
 });
 import "./modules/index.module";
 /* 

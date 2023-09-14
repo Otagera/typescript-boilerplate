@@ -5,7 +5,7 @@ export const StandardAPIResponseFn: IStandardAPIResponseFn = (
 ) => {
 	return {
 		status: status ? "Success" : "Failed",
-		message: message && status ? "Request is successfull" : "Request failed.",
+		message: message || status ? "Request is successfull" : "Request failed.",
 		data,
 	};
 };

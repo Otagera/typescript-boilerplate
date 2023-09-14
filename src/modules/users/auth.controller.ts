@@ -1,13 +1,11 @@
 import { Response } from "express";
 
 import { post, bodyValidator, controller } from "../../decorators/index";
-import { IUser } from "./users.interface";
+import { IUser, IUserDocument } from "./users.interface";
 import { RequestWithBody } from "src/interfaces";
 import { UsersService } from "./users.service";
 import { EncryptService, StandardAPIResponseFn, HttpStatus } from "@lib/utils";
 import {} from "@lib/utils";
-
-console.log("Test");
 
 @controller("/auth")
 class AuthController {
@@ -44,6 +42,7 @@ class AuthController {
 				);
 			}
 		} catch (error) {
+			console.log(error);
 			return res.statusJson(
 				HttpStatus.INTERNAL_SERVER_ERROR,
 				StandardAPIResponseFn("Something went wrong!", false, error)
@@ -79,7 +78,7 @@ class AuthController {
 				);
 			} else {
 				const hash = await _encryptService.encryptPassword(password);
-				const user = await _usersService.create(
+				const user: IUser | IUserDocument = await _usersService.create(
 					username.toLowerCase(),
 					hash,
 					email,
@@ -87,10 +86,11 @@ class AuthController {
 					firstname,
 					lastname
 				);
+				const docUser = user as IUserDocument;
 				return res.statusJson(
 					HttpStatus.OK,
 					StandardAPIResponseFn("User created successful", true, {
-						user,
+						user: docUser.toJSON(),
 					})
 				);
 			}

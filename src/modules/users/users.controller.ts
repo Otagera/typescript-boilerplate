@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 import { get, controller } from "../../decorators/index";
 import { IUser } from "./users.interface";
 import { UsersService } from "./users.service";
 import { HttpStatus, StandardAPIResponseFn } from "@lib/utils";
-
-const UserModel = mongoose.model<IUser>("User");
 
 @controller("/users")
 export class UserController {

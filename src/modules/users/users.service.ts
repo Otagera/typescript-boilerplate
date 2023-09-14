@@ -39,7 +39,7 @@ export class UsersService implements IUsersService {
 		firstname?: string;
 		lastname?: string;
 	}) {
-		return this.user.fetchAll({ where: { filter } });
+		return this.user.fetchAll(filter);
 	}
 	async update(id: ObjectId, attrs: Partial<IUser>) {
 		const user = await this.findOne(id);
