@@ -1,3 +1,4 @@
+import { IStandardAPIResponse, HttpStatus } from "@lib/utils";
 import { Express } from "express-serve-static-core";
 
 declare global {
@@ -12,7 +13,7 @@ declare global {
 }
 declare module "express-serve-static-core" {
 	interface Response {
-		statusJson: (statusCode: number, data: {}) => void;
+		statusJson: (statusCode: HttpStatus, data: IStandardAPIResponse) => void;
 	}
 }
 

@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import "pino-mongodb";
 import { LoggerService } from "@lib/logger";
-import { EnvConfigService } from "@lib/utils";
+import { EnvConfigService, HttpStatus, IStandardAPIResponse } from "@lib/utils";
 import { AppRouter } from "./AppRouter";
 
 dotenv.config();
@@ -41,12 +41,11 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-	res.statusJson = (statusCode: number, data: {}): void => {
-		let obj = {
-			...data,
-			statusCode: statusCode,
-		};
-		res.status(statusCode).json(obj);
+	res.statusJson = (
+		statusCode: HttpStatus,
+		data: IStandardAPIResponse
+	): void => {
+		res.status(statusCode).json(data);
 		return;
 	};
 	next();
