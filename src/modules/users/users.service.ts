@@ -1,11 +1,11 @@
-import mongoose, { Document, Model, ObjectId } from "mongoose";
-import { IUser, IUserDocument } from "./users.interface";
+import mongoose, { Model, ObjectId } from "mongoose";
+import { IUser, IUserDocument, IUsersService } from "./users.interface";
 import { MongoGenericRepository } from "src/mongo-repository";
 import { ApiNotFoundException } from "@lib/logger/pino/type";
 
-export class UsersService {
+export class UsersService implements IUsersService {
 	user: MongoGenericRepository<IUser>;
-	private _userRepository: Model<IUserDocument>;
+	private _userRepository: Model<IUserDocument> = mongoose.model("User");
 	constructor() {
 		this.user = new MongoGenericRepository<IUser>(this._userRepository);
 	}
