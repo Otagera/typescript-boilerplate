@@ -119,17 +119,18 @@ export class LoggerService implements ILoggerService {
 	}
 
 	getPinoConfig() {
+		console.log("[getPinoConfig]");
 		return {
 			colorize: isColorSupported,
 			levelFirst: true,
-			ignore: "pid,hostname",
+			ignore: "pid,hostname,path,formattedTimeStamp,request,response",
 			quietReqLogger: true,
 			messageFormat: (log: unknown, messageKey: string) => {
 				const message = log[String(messageKey)];
 				if (this._app) {
 					return `[${this._app}] ${message}`;
 				}
-
+				console.log(message);
 				return message;
 			},
 			customPrettifiers: {
