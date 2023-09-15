@@ -119,7 +119,6 @@ export class LoggerService implements ILoggerService {
 	}
 
 	getPinoConfig() {
-		console.log("[getPinoConfig]");
 		return {
 			colorize: isColorSupported,
 			levelFirst: true,

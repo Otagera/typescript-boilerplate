@@ -1,6 +1,4 @@
-# `Live Demo`
-<!-- This is the github page of my portfolio that could be found [here](http://pod-generator.herokuapp.com/). -->
-
+# `Typescript Boilerplate`
 This project was created using ExpressJs, Typescript, Airtable
 
 ## Available Scripts
@@ -17,7 +15,13 @@ Runs the build system, to build to typescript files into Javascript.
 
 ### `npm start run`
 
-Runs nodemon with actually runs the express application.
+Runs nodemon with actually runs the js built express application.
 
-#`Documentation`
-https://documenter.getpostman.com/view/14845486/UVC3moZV
+### `npm run build`
+
+Runs the build system, to build to typescript files into Javascript.
+
+### `npm run dev`
+
+Runs nodemon with actually runs the express application with ts built.
+
