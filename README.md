@@ -1,5 +1,5 @@
 # `Typescript Boilerplate`
-This project was created using ExpressJs, Typescript, Airtable
+This project was created using ExpressJs, Typescript, MongoDB
 
 ## Available Scripts
 

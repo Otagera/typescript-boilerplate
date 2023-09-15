@@ -78,6 +78,10 @@ server.on("listening", () => {
 	console.log("================================");
 	console.log("App is listening from port: " + port);
 });
+
+process.on("SIGINT", () => {
+	server.close();
+});
 import "./modules/index.module";
 /* 
 function print(path, layer) {

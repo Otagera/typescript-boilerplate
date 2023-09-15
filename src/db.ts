@@ -32,7 +32,7 @@ mongoose.connection.on("disconnected", () => {
 	console.log("Mongoose disconnected");
 });
 
-const shutdown = (msg: string, callback) => {
+export const shutdown = (msg: string, callback) => {
 	mongoose.connection.addListener("close", () => {
 		console.log(`Mongoose disconnected through ${msg}`);
 		callback();
